@@ -1,10 +1,25 @@
-import { useEffect, useState } from "react";
-import { addTask, countsFor, loadTasks, saveTasks, toggleTask, updateCounts, type Counts, type Task } from "./tasks";
+import { useEffect, useMemo, useState } from "react";
+import {
+  addTask,
+  countsFor,
+  loadTasks,
+  saveTasks,
+  SORT_MODES,
+  sortTasks,
+  toggleTask,
+  updateCounts,
+  type Counts,
+  type SortMode,
+  type Task,
+} from "./tasks";
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [counts, setCounts] = useState<Counts>(() => countsFor(tasks));
   const [draft, setDraft] = useState("");
+  const [sortMode, setSortMode] = useState<SortMode>("oldest");
+  const [incompleteFirst, setIncompleteFirst] = useState(false);
+  const visibleTasks = useMemo(() => sortTasks(tasks, sortMode, incompleteFirst), [tasks, sortMode, incompleteFirst]);
 
   useEffect(() => saveTasks(tasks), [tasks]);
 
@@ -46,8 +61,28 @@ export default function App() {
         <button data-testid="add-task-button" type="submit">Add</button>
       </form>
 
+      <div className="sort" aria-label="Sort tasks">
+        <label>
+          <span>Sort</span>
+          <select data-testid="sort-select" value={sortMode} onChange={(e) => setSortMode(e.target.value as SortMode)}>
+            {SORT_MODES.map((m) => (
+              <option key={m.value} value={m.value}>{m.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="toggle">
+          <input
+            type="checkbox"
+            data-testid="incomplete-first-toggle"
+            checked={incompleteFirst}
+            onChange={(e) => setIncompleteFirst(e.target.checked)}
+          />
+          <span>Incomplete first</span>
+        </label>
+      </div>
+
       <ul className="tasks" data-testid="task-list">
-        {tasks.map((t) => (
+        {visibleTasks.map((t) => (
           <li key={t.id} data-testid="task-item" className={t.done ? "done" : ""}>
             <label>
               <input type="checkbox" data-testid="task-checkbox" checked={t.done} onChange={() => onToggle(t)} />

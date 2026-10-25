@@ -36,6 +36,27 @@ export function updateCounts(prev: Counts, event: { type: "added" } | { type: "t
   return { ...prev, remaining: prev.remaining + 1 };
 }
 
+export type SortMode = "newest" | "oldest" | "alphabetical";
+
+export const SORT_MODES: { value: SortMode; label: string }[] = [
+  { value: "oldest", label: "Oldest first" },
+  { value: "newest", label: "Newest first" },
+  { value: "alphabetical", label: "Alphabetical (A–Z)" },
+];
+
+export function sortTasks(tasks: Task[], mode: SortMode, incompleteFirst = false): Task[] {
+  const compare = (a: Task, b: Task): number => {
+    if (incompleteFirst && a.done !== b.done) return a.done ? 1 : -1;
+    if (mode === "alphabetical") return a.title.localeCompare(b.title, undefined, { sensitivity: "base" });
+    if (mode === "newest") return b.createdAt - a.createdAt;
+    return a.createdAt - b.createdAt;
+  };
+  return tasks
+    .map((task, index) => ({ task, index }))
+    .sort((a, b) => compare(a.task, b.task) || (mode === "newest" ? b.index - a.index : a.index - b.index))
+    .map(({ task }) => task);
+}
+
 export function countsFor(tasks: Task[]): Counts {
   const completed = tasks.filter((t) => t.done).length;
   return { total: tasks.length, completed, remaining: tasks.length - completed };
