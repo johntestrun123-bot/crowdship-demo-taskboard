@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react";
+import { applyTheme, getInitialTheme, getStoredTheme, storeTheme, watchSystemTheme, type Theme } from "./theme";
 import { addTask, countsFor, loadTasks, saveTasks, toggleTask, updateCounts, type Counts, type Task } from "./tasks";
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [counts, setCounts] = useState<Counts>(() => countsFor(tasks));
   const [draft, setDraft] = useState("");
+  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
 
   useEffect(() => saveTasks(tasks), [tasks]);
+  useEffect(() => applyTheme(theme), [theme]);
+  useEffect(() => watchSystemTheme((system) => {
+    if (!getStoredTheme()) setTheme(system);
+  }), []);
+
+  function onToggleTheme() {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    storeTheme(next);
+    setTheme(next);
+  }
 
   function onAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -23,9 +35,21 @@ export default function App() {
 
   return (
     <main className="board">
-      <header>
-        <p className="eyebrow">Hackathon 2026</p>
-        <h1>Event Task Board</h1>
+      <header className="header">
+        <div>
+          <p className="eyebrow">Hackathon 2026</p>
+          <h1>Event Task Board</h1>
+        </div>
+        <button
+          type="button"
+          className="theme-toggle"
+          data-testid="theme-toggle"
+          aria-pressed={theme === "dark"}
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
+          onClick={onToggleTheme}
+        >
+          {theme === "dark" ? "Light mode" : "Dark mode"}
+        </button>
       </header>
 
       <section className="counts" aria-label="Task counts">

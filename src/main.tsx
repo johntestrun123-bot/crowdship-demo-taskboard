@@ -2,6 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
+import { applyTheme, getInitialTheme } from "./theme";
+
+applyTheme(getInitialTheme());
 
 // CrowdShip feedback widget: only activates when the app is opened from a CrowdShip room.
 const crowdship = import.meta.env.VITE_CROWDSHIP_URL as string | undefined;
