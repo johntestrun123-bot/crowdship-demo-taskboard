@@ -3,6 +3,7 @@ import {
   addTask,
   countsFor,
   loadTasks,
+  progressFor,
   saveTasks,
   SORT_MODES,
   sortTasks,
@@ -20,6 +21,8 @@ export default function App() {
   const [sortMode, setSortMode] = useState<SortMode>("oldest");
   const [incompleteFirst, setIncompleteFirst] = useState(false);
   const visibleTasks = useMemo(() => sortTasks(tasks, sortMode, incompleteFirst), [tasks, sortMode, incompleteFirst]);
+
+  const progress = progressFor(tasks);
 
   useEffect(() => saveTasks(tasks), [tasks]);
 
@@ -48,6 +51,24 @@ export default function App() {
         <div><span data-testid="completed-count">{counts.completed}</span><label>Done</label></div>
         <div><span data-testid="remaining-count">{counts.remaining}</span><label>Left</label></div>
       </section>
+
+      {tasks.length > 0 && (
+        <div className="progress">
+          <div
+            className="progress-track"
+            data-testid="progress-bar"
+            role="progressbar"
+            aria-label="Tasks completed"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+            aria-valuetext={`${progress}% complete`}
+          >
+            <div className="progress-fill" style={{ width: `${progress}%` }} />
+          </div>
+          <span className="progress-label" data-testid="progress-percent">{progress}%</span>
+        </div>
+      )}
 
       <form className="add" onSubmit={onAdd}>
         <input

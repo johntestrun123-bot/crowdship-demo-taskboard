@@ -84,3 +84,36 @@ test("moves completed tasks below incomplete ones when enabled", async ({ page }
   await page.getByTestId("incomplete-first-toggle").uncheck();
   await expect(titles.first()).toHaveText("Pick up badges at registration");
 });
+
+test("shows a progress bar that updates as tasks are added and toggled", async ({ page }) => {
+  const bar = page.getByRole("progressbar", { name: "Tasks completed" });
+  const percent = page.getByTestId("progress-percent");
+  await expect(page.getByTestId("progress-bar")).toBeVisible();
+  await expect(bar).toHaveAttribute("aria-valuenow", "0");
+  await expect(percent).toHaveText("0%");
+
+  await page.getByTestId("new-task-input").fill("Grab coffee");
+  await page.getByTestId("add-task-button").click();
+  await page.getByTestId("task-checkbox").first().check();
+  await expect(bar).toHaveAttribute("aria-valuenow", "25");
+  await expect(percent).toHaveText("25%");
+
+  await page.getByTestId("task-checkbox").nth(1).check();
+  await expect(percent).toHaveText("50%");
+
+  await page.getByTestId("task-checkbox").first().uncheck();
+  await expect(bar).toHaveAttribute("aria-valuenow", "25");
+  await expect(percent).toHaveText("25%");
+});
+
+test("hides the progress bar when there are no tasks", async ({ page }) => {
+  await page.evaluate(() => localStorage.setItem("taskboard:v1", "[]"));
+  await page.reload();
+  await expect(page.getByTestId("empty-state")).toBeVisible();
+  await expect(page.getByTestId("progress-bar")).toHaveCount(0);
+
+  await page.getByTestId("new-task-input").fill("First task");
+  await page.getByTestId("add-task-button").click();
+  await expect(page.getByTestId("progress-bar")).toBeVisible();
+  await expect(page.getByTestId("progress-percent")).toHaveText("0%");
+});

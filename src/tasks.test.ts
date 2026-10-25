@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addTask, countsFor, sortTasks, toggleTask, updateCounts, type Task } from "./tasks";
+import { addTask, countsFor, progressFor, sortTasks, toggleTask, updateCounts, type Task } from "./tasks";
 
 describe("tasks", () => {
   it("adds trimmed tasks and ignores blanks", () => {
@@ -66,5 +66,23 @@ describe("sortTasks", () => {
     const copy = [...tasks];
     sortTasks(tasks, "newest", true);
     expect(tasks).toEqual(copy);
+  });
+});
+
+describe("progressFor", () => {
+  const task = (id: string, done: boolean): Task => ({ id, title: id, done, createdAt: 0 });
+
+  it("is 0 for an empty board", () => {
+    expect(progressFor([])).toBe(0);
+  });
+
+  it("returns completed / total as a percentage", () => {
+    expect(progressFor([task("a", true), task("b", false), task("c", false), task("d", false)])).toBe(25);
+    expect(progressFor([task("a", true), task("b", true)])).toBe(100);
+  });
+
+  it("rounds to the nearest whole percent", () => {
+    expect(progressFor([task("a", true), task("b", false), task("c", false)])).toBe(33);
+    expect(progressFor([task("a", true), task("b", true), task("c", false)])).toBe(67);
   });
 });

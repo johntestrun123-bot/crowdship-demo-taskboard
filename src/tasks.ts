@@ -62,6 +62,11 @@ export function countsFor(tasks: Task[]): Counts {
   return { total: tasks.length, completed, remaining: tasks.length - completed };
 }
 
+export function progressFor(tasks: Task[]): number {
+  if (tasks.length === 0) return 0;
+  return Math.round((tasks.filter((t) => t.done).length / tasks.length) * 100);
+}
+
 const KEY = "taskboard:v1";
 export function loadTasks(): Task[] {
   try {
