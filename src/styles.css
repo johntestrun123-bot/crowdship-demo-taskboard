@@ -15,6 +15,10 @@ h1 { margin: 4px 0 20px; font-size: 28px; }
 .add { display: flex; gap: 8px; margin-bottom: 14px; }
 .add input { flex: 1; height: 48px; border-radius: 12px; border: 1px solid var(--line); padding: 0 14px; font-size: 16px; background: var(--card); color: var(--fg); }
 .add button { height: 48px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--accent); color: white; font-weight: 600; font-size: 15px; }
+.sort { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 12px; color: var(--muted); font-size: 14px; }
+.sort label { display: flex; align-items: center; gap: 8px; }
+.sort select { height: 40px; border-radius: 10px; border: 1px solid var(--line); padding: 0 10px; font-size: 15px; background: var(--card); color: var(--fg); }
+.sort .toggle input { width: 18px; height: 18px; margin: 0; }
 .tasks { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .tasks li { background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
 .tasks label { display: flex; align-items: center; gap: 12px; padding: 14px; font-size: 16px; cursor: pointer; }
