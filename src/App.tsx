@@ -12,6 +12,7 @@ import {
   type SortMode,
   type Task,
 } from "./tasks";
+import { applyTheme, loadThemePreference, nextTheme, saveThemePreference, systemTheme, watchSystemTheme, type Theme } from "./theme";
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
@@ -21,7 +22,19 @@ export default function App() {
   const [incompleteFirst, setIncompleteFirst] = useState(false);
   const visibleTasks = useMemo(() => sortTasks(tasks, sortMode, incompleteFirst), [tasks, sortMode, incompleteFirst]);
 
+  const [themePreference, setThemePreference] = useState<Theme | null>(() => loadThemePreference());
+  const [osTheme, setOsTheme] = useState<Theme>(() => systemTheme());
+  const theme = themePreference ?? osTheme;
+
   useEffect(() => saveTasks(tasks), [tasks]);
+  useEffect(() => watchSystemTheme(setOsTheme), []);
+  useEffect(() => applyTheme(theme), [theme]);
+
+  function onToggleTheme() {
+    const next = nextTheme(theme);
+    saveThemePreference(next);
+    setThemePreference(next);
+  }
 
   function onAdd(e: React.FormEvent) {
     e.preventDefault();
@@ -38,9 +51,21 @@ export default function App() {
 
   return (
     <main className="board">
-      <header>
-        <p className="eyebrow">Hackathon 2026</p>
-        <h1>Event Task Board</h1>
+      <header className="top">
+        <div>
+          <p className="eyebrow">Hackathon 2026</p>
+          <h1>Event Task Board</h1>
+        </div>
+        <button
+          type="button"
+          className="theme-toggle"
+          data-testid="theme-toggle"
+          aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+          aria-pressed={theme === "dark"}
+          onClick={onToggleTheme}
+        >
+          {theme === "dark" ? "Light" : "Dark"} mode
+        </button>
       </header>
 
       <section className="counts" aria-label="Task counts">
