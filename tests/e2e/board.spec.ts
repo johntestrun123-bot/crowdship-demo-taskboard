@@ -31,3 +31,14 @@ test("tasks persist across reloads", async ({ page }) => {
   await page.reload();
   await expect(page.getByText("Persist me")).toBeVisible();
 });
+
+test("progress bar reflects completed tasks and updates live", async ({ page }) => {
+  await page.getByTestId("new-task-input").fill("Fourth task");
+  await page.getByTestId("add-task-button").click();
+  const bar = page.getByTestId("progress-bar");
+  await expect(bar).toHaveAttribute("role", "progressbar");
+  await expect(page.getByTestId("progress-label")).toHaveText("0%");
+  await page.getByTestId("task-checkbox").first().check();
+  await expect(page.getByTestId("progress-label")).toHaveText("25%");
+  await expect(bar).toHaveAttribute("aria-valuenow", "25");
+});

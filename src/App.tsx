@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ProgressBar } from "./ProgressBar";
 import { addTask, countsFor, loadTasks, saveTasks, toggleTask, updateCounts, type Counts, type Task } from "./tasks";
 
 export default function App() {
@@ -33,6 +34,8 @@ export default function App() {
         <div><span data-testid="completed-count">{counts.completed}</span><label>Done</label></div>
         <div><span data-testid="remaining-count">{counts.remaining}</span><label>Left</label></div>
       </section>
+
+      <ProgressBar completed={tasks.filter((t) => t.done).length} total={tasks.length} />
 
       <form className="add" onSubmit={onAdd}>
         <input

@@ -21,3 +21,7 @@ h1 { margin: 4px 0 20px; font-size: 28px; }
 .tasks input { width: 20px; height: 20px; }
 .tasks li.done span { text-decoration: line-through; color: var(--muted); }
 .empty { color: var(--muted); text-align: center; }
+.progress { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.progress-track { flex: 1; height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 999px; background: var(--accent); transition: width .3s ease; }
+.progress-label { min-width: 3.5ch; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); }
