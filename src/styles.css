@@ -12,6 +12,10 @@ h1 { margin: 4px 0 20px; font-size: 28px; }
 .counts div { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; }
 .counts span { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .counts label { color: var(--muted); font-size: 13px; }
+.progress { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.progress-track { flex: 1; height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: inherit; transition: width .2s ease; }
+.progress-label { min-width: 3.5ch; text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 14px; }
 .add { display: flex; gap: 8px; margin-bottom: 14px; }
 .add input { flex: 1; height: 48px; border-radius: 12px; border: 1px solid var(--line); padding: 0 14px; font-size: 16px; background: var(--card); color: var(--fg); }
 .add button { height: 48px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--accent); color: white; font-weight: 600; font-size: 15px; }
