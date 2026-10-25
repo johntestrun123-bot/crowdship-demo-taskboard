@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { addTask, countsFor, loadTasks, saveTasks, toggleTask, updateCounts, type Counts, type Task } from "./tasks";
+import { useEffect, useMemo, useState } from "react";
+import { addTask, countsFor, loadTasks, saveTasks, toggleTask, type Task } from "./tasks";
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
-  const [counts, setCounts] = useState<Counts>(() => countsFor(tasks));
   const [draft, setDraft] = useState("");
+  const counts = useMemo(() => countsFor(tasks), [tasks]);
 
   useEffect(() => saveTasks(tasks), [tasks]);
 
@@ -12,13 +12,11 @@ export default function App() {
     e.preventDefault();
     if (!draft.trim()) return;
     setTasks((t) => addTask(t, draft));
-    setCounts((c) => updateCounts(c, { type: "added" }));
     setDraft("");
   }
 
   function onToggle(task: Task) {
     setTasks((t) => toggleTask(t, task.id));
-    setCounts((c) => updateCounts(c, { type: "toggled", nowDone: !task.done }));
   }
 
   return (
