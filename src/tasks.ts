@@ -25,15 +25,10 @@ export function toggleTask(tasks: Task[], id: string): Task[] {
   return tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t));
 }
 
-/**
- * Counters are maintained incrementally as tasks change.
- * NOTE: this intentionally contains the demo's "controlled bug" for the bug-report workflow.
- */
 export function updateCounts(prev: Counts, event: { type: "added" } | { type: "toggled"; nowDone: boolean }): Counts {
   if (event.type === "added") return { total: prev.total + 1, completed: prev.completed, remaining: prev.remaining + 1 };
   if (event.nowDone) return { ...prev, completed: prev.completed + 1, remaining: prev.remaining - 1 };
-  // BUG: un-completing a task restores "remaining" but forgets to decrement "completed".
-  return { ...prev, remaining: prev.remaining + 1 };
+  return { ...prev, completed: prev.completed - 1, remaining: prev.remaining + 1 };
 }
 
 export function countsFor(tasks: Task[]): Counts {

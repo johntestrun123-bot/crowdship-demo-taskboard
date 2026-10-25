@@ -12,4 +12,3 @@ npm run test:e2e   # browser tests (playwright)
 - Required checks: `typecheck`, `unit`, `e2e` (see `.github/workflows/ci.yml`; no secrets).
 - `crowdship-agent.yml` is dispatched by CrowdShip to run Claude Code on an approved task.
 - All interactive elements have stable `data-testid` attributes; keep them.
-- Known issue (intentional, for the bug-report demo): see `updateCounts` in `src/tasks.ts`.
